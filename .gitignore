@@ -1,0 +1,17 @@
+# IntelliJ project files
+.idea
+*.iml
+*.log
+*.pyc
+out
+gen
+node_modules
+venv/*
+
+# Python:
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+dist
+build
