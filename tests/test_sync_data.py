@@ -15,7 +15,7 @@ def test_sync_policy():
     collection = MongoUtils("", "local", "oplog.rs").get_mongo_collection()
     oplog_start = bson.timestamp.Timestamp(1552666352, 6)
     oplog_end = bson.timestamp.Timestamp(1552666353, 0)
-    document = {"ns": "jdzz_acrm.policy_result", "ts": {"$gte": oplog_start, "$lt": oplog_end}}
+    document = {"ns": "", "ts": {"$gte": oplog_start, "$lt": oplog_end}}
     cursor = collection.find(document, cursor_type=pymongo.CursorType.TAILABLE_AWAIT, oplog_replay=True).sort(
         [(u'$natural', pymongo.ASCENDING)]).limit(100)
 
@@ -113,15 +113,14 @@ def test_sync_model():
     collection = MongoUtils("", "local", "oplog.rs").get_mongo_collection()
     oplog_start = bson.timestamp.Timestamp(1552618080, 11)
     oplog_end = bson.timestamp.Timestamp(1552618081, 0)
-    document = {"ns": "jdzz_model.model_result", "ts": {"$gte": oplog_start, "$lt": oplog_end}}
+    document = {"ns": "", "ts": {"$gte": oplog_start, "$lt": oplog_end}}
     cursor = collection.find(document, cursor_type=pymongo.CursorType.TAILABLE_AWAIT, oplog_replay=True).sort(
         [(u'$natural', pymongo.ASCENDING)]).limit(100)
 
     for docu in cursor:
         obj = docu["o"]["model_result"]
         print obj["level"], type(obj["level"]), obj.has_key("level"), sync_mongo_service.get_mysql_data(
-            obj["level"]) is not "nan",  obj["level"] is not None
-
+            obj["level"]) is not "nan", obj["level"] is not None
 
 
 def update_model_result(doc, org_id):
@@ -185,9 +184,9 @@ def update_model_result(doc, org_id):
     except Exception as e:
         logger.error(u" update_model_result 函数出现异常 %s oplog 日志记录为: \n %s", e, doc)
 
+
 def test():
     json = {"name": None}
-
 
 
 if __name__ == '__main__':

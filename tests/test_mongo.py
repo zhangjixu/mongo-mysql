@@ -9,7 +9,7 @@ from log import logger
 
 
 def test_mongo():
-    client = MongoUtils("", "", "")
+    client = MongoUtils("", "acrm", "")
     collection = client.get_mongo_collection()
     document = {u'ut': {u'$gte': 1504022400000, u'$lt': 1504540800000}}
     # 按照 pymongo.ASCENDING 表示升序排序
@@ -32,11 +32,11 @@ def add_data():
 
 
 def test_query():
-    collection = MongoUtils("", "", "").get_mongo_collection()
+    collection = MongoUtils("", "local", "oplog.rs").get_mongo_collection()
 
     oplog_start = bson.timestamp.Timestamp(1552298024, 0)
     oplog_end = bson.timestamp.Timestamp(1552298025, 0)
-    document = {"ns": "jdzz_acrm.policy_result", "ts": {"$gte": oplog_start, "$lt": oplog_end}}
+    document = {"ns": "", "ts": {"$gte": oplog_start, "$lt": oplog_end}}
 
     cursor = collection.find(document, cursor_type=pymongo.CursorType.TAILABLE_AWAIT, oplog_replay=True).sort(
         [(u'$natural', pymongo.ASCENDING)]).limit(100)
@@ -75,7 +75,7 @@ def test_insert_policy():
     oplog_start = bson.timestamp.Timestamp(1552035860, 0)
     oplog_end = bson.timestamp.Timestamp(1552035861, 0)
     # 5c6e04666ffe5a3ef6a92bdc
-    document = {"ns": "jdzz_acrm.policy_result", "ts": {"$gte": oplog_start, "$lt": oplog_end}}
+    document = {"ns": "", "ts": {"$gte": oplog_start, "$lt": oplog_end}}
 
     cursor = collection.find(document, cursor_type=pymongo.CursorType.TAILABLE_AWAIT, oplog_replay=True).sort(
         [(u'$natural', pymongo.ASCENDING)]).limit(100)
@@ -97,13 +97,12 @@ def filter_null(value):
     Returns:
 
     """
-    flag = True
+    flag = False
     if type(value) is float and str(value) == "nan":
-        flag = False
+        flag = True
         return flag
-
     if value is None:
-        flag = False
+        flag = True
         return flag
     return flag
 
